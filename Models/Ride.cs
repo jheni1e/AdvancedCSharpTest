@@ -9,5 +9,5 @@ public class Ride
     public int CreatorID { get; set; }
     public User Creator { get; set; }
 
-    public ICollection<Point> Points { get; set; } = [];
+    public ICollection<RidePoint> Points { get; set; } = [];
 }
