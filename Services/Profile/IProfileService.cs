@@ -4,6 +4,7 @@ namespace RideClub.Services.Profile;
 
 public interface IProfileService
 {
-    Task<int> CreateProfile(User profile);
-    Task<User?> GetProfile(string username);
+    Task<int> CreateProfile(User Profile);
+    Task<User?> GetProfile(string Username);
+    Task<User?> GetProfileByID(int ID);
 }
