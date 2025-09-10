@@ -24,7 +24,7 @@ public class GetRideUseCase
         foreach (var p in ridepoint)
             points.Add(p.Point.Name);
 
-        var response = new GetRideResponse(
+        var response = new GetRideResponse (
             ride.Title,
             ride.Description,
             ride.Creator.Name,
