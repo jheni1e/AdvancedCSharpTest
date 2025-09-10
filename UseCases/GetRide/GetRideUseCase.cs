@@ -13,7 +13,6 @@ public class GetRideUseCase
     public async Task<Result<GetRideResponse>> Do(GetRidePayload payload)
     {
         var ride = await service.GetRideByID(payload.RideID);
-
         if (ride is null)
             return Result<GetRideResponse>.Fail("There are no rooms.");
 
