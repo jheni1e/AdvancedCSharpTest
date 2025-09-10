@@ -6,7 +6,6 @@ namespace RideClub.UseCases.GetRide;
 
 public class GetRideUseCase
 (
-    IRideService rideService,
     RideClubDbContext ctx
 )
 {
@@ -15,24 +14,31 @@ public class GetRideUseCase
         var rides = await ctx.Rides
             .Include(r => r.Title)
             .Include(r => r.Description)
-            .Include(r => r.Creator)
-                .ThenInclude(c => c.Name)
             .Include(r => r.Points)
                 .ThenInclude(p => p.Point.Name)
+            .Include(r => r.Creator)
+                .ThenInclude(c => c.Name)
             .Where(r => r.ID == payload.RideID)
             .ToListAsync();
 
         if (!rides.Any())
             return Result<GetRideResponse>.Fail("There are no rooms.");
 
-        var response = rides.Select(r => new GetRideResponse
-        {
-            Title = r.Title,
-            Description = r.Description,
-            Points = p.Name, //ienumerable de strings dos nomes do pontos
-            CreatorName = r.Creator.Name
-        });
+        var ridepoint = await ctx.RidePoints.Where(r => r.RideID == payload.RideID).ToListAsync();
+        if (ridepoint is null)
+            return Result<GetRideResponse>.Fail("There are no ride/points relation.");
 
-        return Result<GetRideResponse>.Success(response);
+        var points = new List<string>();
+        foreach (var p in ridepoint)
+            points.Add(p.Point.Name);
+
+        var response = rides.Select(r => new GetRideResponse(
+            r.Title,
+            r.Description,
+            points,
+            r.Creator.Name
+        ));
+
+        return Result<GetRideResponse>.Success((GetRideResponse)response);
     }
 }

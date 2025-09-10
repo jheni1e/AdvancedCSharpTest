@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using RideClub.Models;
 using RideClub.Services.Profile;
 using RideClub.Services.Rides;
@@ -23,15 +24,18 @@ public class EditRideUseCase
 
         if (creator != ride.Creator)
             return Result<EditRideResponse>.Fail("User is not the ride creator.");
-            
-        // Editar um passeio adicionando um novo ponto turístico ao passeio,
-        // enviando o ID do ponto turístico e o ID do passeio.
-        // Isso só é possível para o usuário que criou o passeio.
+        
+        var point = await ctx.Points.FirstOrDefaultAsync(p => p.ID == payload.PointID);
+        if (point is null)
+            return Result<EditRideResponse>.Fail("Point not found.");
 
-        // user.Bio = payload.Bio ?? user.Bio;
-        // user.Email = payload.Email ?? user.Email;
-        // user.ImageURL = payload.ImageURL ?? user.ImageURL;
-        // user.Username = payload.Username ?? user.Username;
+        ride.Points.Add(new RidePoint
+        {
+            RideID = ride.ID,
+            PointID = point.ID,
+            Ride = ride,
+            Point = point
+        });
 
         await ctx.SaveChangesAsync();
         

@@ -19,7 +19,7 @@ public class CreateRideUseCase
         var ride = new Ride
         {
             Title = payload.Title,
-            Description = payload.Description,
+            Description = payload.Description.Trim(),
             CreatorID = payload.CreatorID,
             Creator = creator
         };

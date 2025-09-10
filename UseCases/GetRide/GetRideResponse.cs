@@ -3,6 +3,6 @@ namespace RideClub.UseCases.GetRide;
 public record GetRideResponse (
     string Title,
     string Description,
-    IEnumerable<string> Points,
+    List<string> Points,
     string CreatorName
 );
