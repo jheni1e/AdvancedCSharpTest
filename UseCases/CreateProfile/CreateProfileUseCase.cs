@@ -10,7 +10,7 @@ public class CreateProfileUseCase
 {
     public async Task<Result<CreateProfileResponse>> Do(CreateProfilePayload payload)
     {
-        var username = service.GetProfile(payload.Username);
+        var username = await service.GetProfile(payload.Username);
         if (username is not null)
             return Result<CreateProfileResponse>.Fail("Username already in use.");
 

@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using RideClub.UseCases.CreateRide;
+using RideClub.UseCases.EditRide;
 using RideClub.UseCases.GetRide;
 
 namespace RideClub.Endpoints;
@@ -19,8 +20,8 @@ public static class RideEndpoints
         });
 
         app.MapPut("edit/ride", async (
-            [FromBody] CreateRidePayload payload,
-            [FromServices] CreateRideUseCase useCase) =>
+            [FromBody] EditRidePayload payload,
+            [FromServices] EditRideUseCase useCase) =>
         {
             var result = await useCase.Do(payload);
             if (result.IsSuccess)
@@ -28,7 +29,7 @@ public static class RideEndpoints
             return Results.BadRequest(result.Reason);
         });
 
-        app.MapGet("ride", async (
+        app.MapPost("ride", async (
             [FromBody] GetRidePayload payload,
             [FromServices] GetRideUseCase useCase) =>
         {
