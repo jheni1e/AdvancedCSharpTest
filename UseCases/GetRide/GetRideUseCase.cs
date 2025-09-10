@@ -27,8 +27,8 @@ public class GetRideUseCase
         var response = new GetRideResponse(
             ride.Title,
             ride.Description,
-            points,
-            ride.Creator.Name
+            ride.Creator.Name,
+            points
         );
 
         return Result<GetRideResponse>.Success(response);
