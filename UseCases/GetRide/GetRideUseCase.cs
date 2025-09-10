@@ -24,12 +24,14 @@ public class GetRideUseCase
         foreach (var p in ridepoint)
             points.Add(p.Point.Name);
 
-        var response = new GetRideResponse (
+        GetRideResponse response = new (
             ride.Title,
             ride.Description,
             ride.Creator.Name,
             points
         );
+        if (response is null)
+            return Result<GetRideResponse>.Fail("There are no ride/points relation.");
 
         return Result<GetRideResponse>.Success(response);
     }
