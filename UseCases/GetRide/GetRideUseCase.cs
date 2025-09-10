@@ -6,22 +6,15 @@ namespace RideClub.UseCases.GetRide;
 
 public class GetRideUseCase
 (
+    IRideService service,
     RideClubDbContext ctx
 )
 {
     public async Task<Result<GetRideResponse>> Do(GetRidePayload payload)
     {
-        var rides = await ctx.Rides
-            .Include(r => r.Title)
-            .Include(r => r.Description)
-            .Include(r => r.Points)
-                .ThenInclude(p => p.Point.Name)
-            .Include(r => r.Creator)
-                .ThenInclude(c => c.Name)
-            .Where(r => r.ID == payload.RideID)
-            .ToListAsync();
+        var ride = await service.GetRideByID(payload.RideID);
 
-        if (!rides.Any())
+        if (ride is null)
             return Result<GetRideResponse>.Fail("There are no rooms.");
 
         var ridepoint = await ctx.RidePoints.Where(r => r.RideID == payload.RideID).ToListAsync();
@@ -32,13 +25,13 @@ public class GetRideUseCase
         foreach (var p in ridepoint)
             points.Add(p.Point.Name);
 
-        var response = rides.Select(r => new GetRideResponse(
-            r.Title,
-            r.Description,
+        var response = new GetRideResponse(
+            ride.Title,
+            ride.Description,
             points,
-            r.Creator.Name
-        ));
+            ride.Creator.Name
+        );
 
-        return Result<GetRideResponse>.Success((GetRideResponse)response);
+        return Result<GetRideResponse>.Success(response);
     }
 }
